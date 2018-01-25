@@ -1,0 +1,9 @@
+- args:
+    sql: ALTER TABLE "matches" ALTER COLUMN "umpire1" TYPE text;
+  type: run_sql
+- args:
+    sql: ALTER TABLE "matches" ALTER COLUMN "umpire1" DROP DEFAULT;
+  type: run_sql
+- args:
+    sql: ALTER TABLE "matches" ALTER COLUMN "umpire1" DROP NOT NULL;
+  type: run_sql
