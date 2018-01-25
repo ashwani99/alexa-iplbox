@@ -1,0 +1,7 @@
+- alias: hasura
+  config:
+    configmap: controller-conf
+    namespace: cathedral65-hasura
+  data: null
+  kubeContext: cathedral65
+  name: cathedral65
