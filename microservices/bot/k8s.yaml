@@ -20,6 +20,11 @@ items:
       spec:
         containers:
         - image: hasura/hello-world:latest
+          env:
+          - name: PRODUCTION
+            value: "false"
+          - name: CLUSTER_NAME
+            value: {{ cluster.name }}
           imagePullPolicy: IfNotPresent
           name: bot
           ports:
