@@ -1,7 +1,7 @@
 - alias: hasura
   config:
     configmap: controller-conf
-    namespace: cathedral65-hasura
+    namespace: camouflage81-hasura
   data: null
-  kubeContext: cathedral65
-  name: cathedral65
+  kubeContext: camouflage81
+  name: camouflage81
