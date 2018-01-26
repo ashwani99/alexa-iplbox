@@ -1,1 +1,7 @@
-GetWinnerIntent Which team won the IPL in {season}
+GetWinnerIntent which team won the IPL in {season}
+GetWinnerIntent the team that won the IPL in {season}
+GetWinnerIntent in {season} which team had won the IPL
+GetWinnerIntent which team won in {season}
+GetWinnerIntent the team that won in {season}
+GetWinnerIntent in {season} which team had won
+GetWinnerIntent winning team of year {season}
