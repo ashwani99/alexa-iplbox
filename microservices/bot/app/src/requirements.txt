@@ -1,2 +1,4 @@
 flask
+flask-ask
+requests
 gunicorn
