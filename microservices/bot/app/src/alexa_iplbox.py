@@ -16,7 +16,7 @@ def home():
     return 'Alexa IPLBox is running now.'
 
 
-ask = Ask(app, '/')
+ask = Ask(app, '/alexa-iplbox')
 
 @ask.launch
 def handle_launch():
