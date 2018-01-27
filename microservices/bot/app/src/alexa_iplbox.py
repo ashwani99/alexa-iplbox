@@ -1,14 +1,19 @@
-from src import app
-from flask_ask import Ask, statement
 import os
-import requests
 import json
+from flask_ask import Ask, statement, request
+from flask_socketio import SocketIO, emit
+from flask import render_template
+import requests
+from src import app
 
 PRODUCTION_ENV = os.environ.get('PRODUCTION')
 CLUSTER_NAME = os.environ.get('CLUSTER_NAME')
 
-if CLUSTER_NAME == None:
+if CLUSTER_NAME is None:
     print('export environment variable CLUSTER_NAME')
+
+ask = Ask(app, '/alexa-iplbox')
+socketio = SocketIO(app)
 
 @app.route('/')
 @app.route('/index')
@@ -16,7 +21,10 @@ def home():
     return 'Alexa IPLBox is running now.'
 
 
-ask = Ask(app, '/alexa-iplbox')
+@socketio.on('connect', namespace='/')
+def test_message():
+    emit('connect', 'Server has connected.')
+
 
 @ask.launch
 def handle_launch():
@@ -25,7 +33,6 @@ def handle_launch():
 
 
 @ask.intent('GetWinnerIntent')
-@app.route('/lsls')
 def get_winner(season):
     # SEASON_WORD_TO_YEAR = {
     #     '1st': 2008,
@@ -43,7 +50,7 @@ def get_winner(season):
     #     season = SEASON_WORD_TO_YEAR[season_word]
     # else:
     #     season = season_numeric
-    if PRODUCTION_ENV == True:
+    if PRODUCTION_ENV:
         data_url = "http://data.hasura/v1/query"
     else:
         data_url = "https://data." + CLUSTER_NAME + ".hasura-app.io/v1/query"
@@ -62,13 +69,35 @@ def get_winner(season):
     }
     response = requests.request('POST', data_url, data=json.dumps(body), headers=headers)
     json_response = response.json()
-    print(json_response) # for testing purpose
+    # print(json_response) # for testing purpose
+    is_error_occured = False
     if 'result' in json_response:
         if len(json_response['result']) > 1: # check if result is actually available
             winner = json_response['result'][1][0]
             answer = 'IPL Box tells me that the {} season of Indian Premier League was won by {}'.format(season, winner)
         else:
             answer = 'Sorry, I couldn\'t find any IPL season in year... {}'.format(season)
+            is_error_occured = True
     else:
         answer = 'Sorry, I couldn\'t find any IPL season in year... {}'.format(season)
+        is_error_occured = True
+    send_log(
+        str(request.timestamp),
+        body['args']['sql'],
+        answer,
+        response.elapsed.total_seconds(),
+        is_error_occured
+    )
     return statement(answer)
+
+
+def send_log(timestamp, query_text, response_text, response_time, is_error_occured):
+    '''Send logging information through websocket'''
+    query_log = {
+        'timestamp': timestamp,
+        'query_text': query_text,
+        'response_text': response_text,
+        'response_time': response_time,
+        'is_error_occured': is_error_occured
+    }
+    socketio.emit('intentRequest', query_log, json=True)
