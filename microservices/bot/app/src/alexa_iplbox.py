@@ -51,7 +51,7 @@ def get_winner(season):
         data_url = "https://data." + CLUSTER_NAME + ".hasura-app.io/v1/query"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": os.environ.get()
+        "Authorization": os.environ.get('DATA_ADMIN_TOKEN')
     }
     body = {
         "type": "run_sql",

@@ -25,6 +25,11 @@ items:
             value: "false"
           - name: CLUSTER_NAME
             value: {{ cluster.name }}
+          - name: DATA_ADMIN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: bot.data.admin_token.key
+                name: hasura-secrets
           imagePullPolicy: IfNotPresent
           name: bot
           ports:
