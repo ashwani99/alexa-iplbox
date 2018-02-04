@@ -1,5 +1,4 @@
 flask
 flask-ask
 requests
-flask-socketio
 gunicorn

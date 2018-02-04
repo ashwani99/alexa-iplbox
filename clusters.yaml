@@ -5,3 +5,10 @@
   data: null
   kubeContext: camouflage81
   name: camouflage81
+- alias: testcluster
+  config:
+    configmap: controller-conf
+    namespace: freestyle37-hasura
+  data: null
+  kubeContext: freestyle37
+  name: freestyle37

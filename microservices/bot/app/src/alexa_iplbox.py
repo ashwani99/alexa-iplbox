@@ -1,8 +1,7 @@
 import os
 import json
 from flask_ask import Ask, statement, request
-from flask_socketio import SocketIO, emit
-from flask import render_template
+from flask import render_template, make_response, redirect, session
 import requests
 from src import app
 
@@ -10,20 +9,16 @@ PRODUCTION_ENV = os.environ.get('PRODUCTION')
 CLUSTER_NAME = os.environ.get('CLUSTER_NAME')
 
 if CLUSTER_NAME is None:
-    print('export environment variable CLUSTER_NAME')
+    print('CLUSTER_NAME not found. Please export environment variable CLUSTER_NAME=<name_of_your_hasura_cluster>')
+
 
 ask = Ask(app, '/alexa-iplbox')
-socketio = SocketIO(app)
+
 
 @app.route('/')
 @app.route('/index')
 def home():
     return 'Alexa IPLBox is running now.'
-
-
-@socketio.on('connect', namespace='/')
-def test_message():
-    emit('connect', 'Server has connected.')
 
 
 @ask.launch
@@ -56,7 +51,7 @@ def get_winner(season):
         data_url = "https://data." + CLUSTER_NAME + ".hasura-app.io/v1/query"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer bfc401c26fed7dbc2d0657711ed5191a49909926cdda4093"
+        "Authorization": os.environ.get()
     }
     body = {
         "type": "run_sql",
@@ -81,23 +76,25 @@ def get_winner(season):
     else:
         answer = 'Sorry, I couldn\'t find any IPL season in year... {}'.format(season)
         is_error_occured = True
-    send_log(
-        str(request.timestamp),
-        body['args']['sql'],
-        answer,
-        response.elapsed.total_seconds(),
-        is_error_occured
-    )
+    # set logs data into session values
+    session.timestamp = str(request.timestamp)
+    session.query_text = 'Which team won the IPL in {}'.format(season), # Hardcoded value, TODO: update this
+    session.answer = answer
+    session['response_time'] = response.elapsed.total_seconds()
+    session['is_error_occured'] = is_error_occured
     return statement(answer)
 
 
-def send_log(timestamp, query_text, response_text, response_time, is_error_occured):
-    '''Send logging information through websocket'''
+@app.route('/logs', methods=['POST'])
+def send_log():
+    '''Send logs to /logs endpoint'''
     query_log = {
-        'timestamp': timestamp,
-        'query_text': query_text,
-        'response_text': response_text,
-        'response_time': response_time,
-        'is_error_occured': is_error_occured
+        'timestamp': session['timestamp'] if 'timestamp' in session else None,
+        'query_text': session['query_text'] if 'query_text' in session else None,
+        'response_text': session['response_text'] if 'response_text' in session else None,
+        'response_time': session['response_time'] if 'response_time' in session else None,
+        'is_error_occured': session['is_error_occured'] if 'is_error_occured' in session else None
     }
-    socketio.emit('intentRequest', query_log, json=True)
+    response = make_response(json.dumps(query_log))
+    response.headers['Content-Type'] = 'application/json'
+    return response
