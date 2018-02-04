@@ -1,9 +1,0 @@
-- args:
-    sql: ALTER TABLE "matches" ALTER COLUMN "winner" TYPE text;
-  type: run_sql
-- args:
-    sql: ALTER TABLE "matches" ALTER COLUMN "winner" DROP DEFAULT;
-  type: run_sql
-- args:
-    sql: ALTER TABLE "matches" ALTER COLUMN "winner" DROP NOT NULL;
-  type: run_sql

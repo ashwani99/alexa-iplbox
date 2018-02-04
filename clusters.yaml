@@ -1,14 +1,7 @@
 - alias: hasura
   config:
     configmap: controller-conf
-    namespace: camouflage81-hasura
+    namespace: defect94-hasura
   data: null
-  kubeContext: camouflage81
-  name: camouflage81
-- alias: testcluster
-  config:
-    configmap: controller-conf
-    namespace: freestyle37-hasura
-  data: null
-  kubeContext: freestyle37
-  name: freestyle37
+  kubeContext: defect94
+  name: defect94
