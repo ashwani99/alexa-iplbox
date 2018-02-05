@@ -107,4 +107,4 @@ def send_log():
     elif request.method == 'PUT':
         for key, value in request.get_json().items():
             query_log[key] = value
-        return 'Successfully updated log', 200
+        return 'Successfully updated log', 202
