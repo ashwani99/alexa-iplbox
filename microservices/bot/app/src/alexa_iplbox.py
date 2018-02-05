@@ -72,7 +72,7 @@ def get_winner(season):
                     ORDER BY season, date DESC;".format(season)
         }
     }
-    response = requests.request('POST', data_url, data=json.dumps(body), headers=headers)
+    response = requests.post(data_url, data=json.dumps(body), headers=headers)
     json_response = response.json()
     # print(json_response) # for testing purpose
     is_error_occured = False
@@ -93,7 +93,9 @@ def get_winner(season):
         'response_time': response.elapsed.total_seconds(),
         'is_error_occured': is_error_occured
     }
-    requests.put(url_for('/logs'), data=jsonify(log_payload)) # make a PUT request to /logs to update new log value
+    headers = {'Content-Type': 'application/json'}
+    logs_url = 'https://bot.{}.hasura-app.io/logs'.format(CLUSTER_NAME)
+    requests.put(logs_url, data=json.dumps(log_payload), headers=headers) # make a PUT request to /logs to update new log value
     return statement(answer)
 
 
