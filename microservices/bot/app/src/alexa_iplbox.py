@@ -1,7 +1,7 @@
 import os
 import json
 from flask_ask import Ask, statement, request
-from flask import render_template, make_response, redirect, session
+from flask import render_template, make_response, request, url_for, jsonify
 import requests
 from src import app
 
@@ -13,6 +13,15 @@ if CLUSTER_NAME is None:
 
 
 ask = Ask(app, '/alexa-iplbox')
+
+# Store latest log data as dict. TODO: Update this
+query_log = {
+    'timestamp': None,
+    'query_text': None,
+    'answer': None,
+    'response_time': None,
+    'is_error_occured': None
+}
 
 
 @app.route('/')
@@ -76,25 +85,23 @@ def get_winner(season):
     else:
         answer = 'Sorry, I couldn\'t find any IPL season in year... {}'.format(season)
         is_error_occured = True
-    # set logs data into session values
-    session.timestamp = str(request.timestamp)
-    session.query_text = 'Which team won the IPL in {}'.format(season), # Hardcoded value, TODO: update this
-    session.answer = answer
-    session['response_time'] = response.elapsed.total_seconds()
-    session['is_error_occured'] = is_error_occured
+    log_payload = {
+        'timestamp': str(request.timestamp),
+        'query_text': 'Which team won the IPL in {}'.format(season), # Hardcoded value, TODO: update this
+        'answer': answer,
+        'response_time': response.elapsed.total_seconds(),
+        'is_error_occured': is_error_occured
+    }
+    requests.put(url_for('/logs'), data=jsonify(log_payload)) # make a PUT request to /logs to update new log value
     return statement(answer)
 
 
-@app.route('/logs', methods=['POST'])
+@app.route('/logs', methods=['GET', 'PUT'])
 def send_log():
     '''Send logs to /logs endpoint'''
-    query_log = {
-        'timestamp': session['timestamp'] if 'timestamp' in session else None,
-        'query_text': session['query_text'] if 'query_text' in session else None,
-        'response_text': session['response_text'] if 'response_text' in session else None,
-        'response_time': session['response_time'] if 'response_time' in session else None,
-        'is_error_occured': session['is_error_occured'] if 'is_error_occured' in session else None
-    }
-    response = make_response(json.dumps(query_log))
-    response.headers['Content-Type'] = 'application/json'
-    return response
+    if request.method == 'GET':
+        return jsonify(query_log)
+    elif request.method == 'PUT':
+        for key, value in request.get_json().items():
+            query_log[key] = value
+        return 'Successfully updated log', 200
