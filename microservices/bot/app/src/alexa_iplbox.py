@@ -1,6 +1,7 @@
 import os
 import json
-from flask_ask import Ask, statement, request
+from flask_ask import Ask, statement
+from flask_ask import request as flask_ask_request
 from flask import render_template, make_response, request, url_for, jsonify
 import requests
 from src import app
@@ -86,7 +87,7 @@ def get_winner(season):
         answer = 'Sorry, I couldn\'t find any IPL season in year... {}'.format(season)
         is_error_occured = True
     log_payload = {
-        'timestamp': str(request.timestamp),
+        'timestamp': str(flask_ask_request.timestamp),
         'query_text': 'Which team won the IPL in {}'.format(season), # Hardcoded value, TODO: update this
         'answer': answer,
         'response_time': response.elapsed.total_seconds(),
