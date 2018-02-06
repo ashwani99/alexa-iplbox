@@ -22,3 +22,9 @@ remotes:
       bot:
         dockerfile: microservices/bot/Dockerfile
         path: microservices/bot
+
+    '{{ cluster.metadata.namespaces.user }}.ui':
+      ui:
+        dockerfile: microservices/ui/Dockerfile
+        path: microservices/ui
+
