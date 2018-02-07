@@ -1,6 +1,6 @@
 import os
 import json
-from flask_ask import Ask, statement
+from flask_ask import Ask, statement, question
 from flask_ask import request as flask_ask_request
 from flask import render_template, make_response, request, url_for, jsonify
 import requests
@@ -34,7 +34,7 @@ def home():
 @ask.launch
 def handle_launch():
     welcome_text = 'Welcome to IPL Box... Ask me anything about the Indian Premier League...'
-    return statement(welcome_text)
+    return question(welcome_text)
 
 
 @ask.intent('GetWinnerIntent')
