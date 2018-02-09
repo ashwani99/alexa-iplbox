@@ -20,7 +20,7 @@ We will use [Hasura](https://hasura.io/) to deploy our code. Do the following st
 1. Use Hasura quickstart to build and deploy the project.
   - Clone the project from Hasura [hub](https://hasura.io/hub) create a hasura cluster. This will create remotes, add your SSH keys to the cluster.
   ```bash
-  $ hasura quickstart ashwani/alexa-iplbox
+  $ hasura quickstart ashwani_/alexa-iplbox
   ```
   - Commit the files and push to remote `hasura`. During this `git push` you will see your project building into the cluster.
 ```bash
