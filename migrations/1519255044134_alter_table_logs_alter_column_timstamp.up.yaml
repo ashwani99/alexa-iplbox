@@ -1,0 +1,9 @@
+- args:
+    sql: ALTER TABLE "logs" ALTER COLUMN "timestamp" TYPE text;
+  type: run_sql
+- args:
+    sql: ALTER TABLE "logs" ALTER COLUMN "timestamp" DROP DEFAULT;
+  type: run_sql
+- args:
+    sql: ALTER TABLE "logs" ALTER COLUMN "timestamp" SET NOT NULL;
+  type: run_sql

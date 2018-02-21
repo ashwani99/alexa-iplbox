@@ -62,7 +62,7 @@ def get_winner(season):
     else:
         session.attributes['query_response'] = 'Sorry, I couldn\'t find any IPL season in year... {}'.format(season)
         session.attributes['is_error_occured'] = True
-    session.attributes['query_text'] = 'Which team won the IPL in {}'.format(season), # Hardcoded value, TODO: update this
+    session.attributes['query_text'] = 'Which team won the IPL in {}'.format(season) # Hardcoded value, TODO: update this
     session.attributes['response_time'] = response.elapsed.total_seconds()
     update_log()
     return statement(session.attributes['query_response'])
@@ -90,4 +90,6 @@ def update_log():
         "Content-Type": "application/json",
         "Authorization": ACCESS_TOKEN
     }
-    requests.post(DATA_URL, data=json.dumps(body), headers=headers)
+    print(body)
+    response = requests.post(DATA_URL, data=json.dumps(body), headers=headers)
+    print(response.content)

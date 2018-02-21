@@ -1,0 +1,3 @@
+- args:
+    sql: ALTER TABLE logs ALTER COLUMN response_time TYPE NUMERIC(8,6) USING response_time::NUMERIC(8,6);
+  type: run_sql

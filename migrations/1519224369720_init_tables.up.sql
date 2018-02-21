@@ -45,7 +45,7 @@ CREATE TABLE deliveries (
 
 CREATE TABLE logs (
   user_id TEXT PRIMARY KEY,
-  timstamp DATE NOT NULL,
+  timestamp DATE NOT NULL,
   query_text TEXT,
   query_response TEXT,
   is_error_occured BOOLEAN
