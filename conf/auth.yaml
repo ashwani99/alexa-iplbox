@@ -184,3 +184,7 @@ superUser:
   # optional  fields
   # email: getstarteduser@hasura.io
   # mobile: 987654321
+
+uiKit:
+  theme: "dark"
+  redirectUrl: "https://bot.{{ cluster.name }}.hasura-app.io/"
