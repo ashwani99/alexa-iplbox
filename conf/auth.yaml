@@ -187,4 +187,3 @@ superUser:
 
 uiKit:
   theme: "dark"
-  redirectUrl: "https://bot.{{ cluster.name }}.hasura-app.io/"
