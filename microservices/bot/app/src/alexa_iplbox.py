@@ -29,7 +29,7 @@ def home():
 @ask.launch
 def handle_launch():
     '''Handles LaunchRequest when the user invokes the skill with the invocation name'''
-    welcome_text = 'Welcome to IPL Box... Ask me anything about the Indian Premier League...'
+    welcome_text = render_template('welcome')
     return question(welcome_text)
 
 
@@ -55,12 +55,12 @@ def get_winner(season):
     if 'result' in json_response:
         if len(json_response['result']) > 1: # check if result is actually available
             winner = json_response['result'][1][0]
-            session.attributes['query_response'] = 'IPL Box tells me that the {} season of Indian Premier League was won by {}'.format(season, winner)
+            session.attributes['query_response'] = render_template('winner', season=season, winner=winner)
         else:
-            session.attributes['query_response'] = 'Sorry, I couldn\'t find any IPL season in year... {}'.format(season)
+            session.attributes['query_response'] = render_template('winner_fail', season=season)
             session.attributes['is_error_occured'] = True
     else:
-        session.attributes['query_response'] = 'Sorry, I couldn\'t find any IPL season in year... {}'.format(season)
+        session.attributes['query_response'] = render_template('winner_fail', season=season)
         session.attributes['is_error_occured'] = True
     session.attributes['query_text'] = 'Which team won the IPL in {}'.format(season) # Hardcoded value, TODO: update this
     session.attributes['response_time'] = response.elapsed.total_seconds()

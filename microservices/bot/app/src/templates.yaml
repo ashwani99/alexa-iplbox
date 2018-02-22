@@ -1,0 +1,8 @@
+welcome: |
+  Welcome to IPL Box... Ask me anything about the Indian Premier League...
+
+winner: |
+  IPL Box tells me that the {{ season }} season of Indian Premier League was won by {{ winner }}
+
+winner_fail: |
+  Sorry, I couldn\'t find any IPL season in year... {{ season }}
