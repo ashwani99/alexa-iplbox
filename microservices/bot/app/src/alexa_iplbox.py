@@ -90,6 +90,4 @@ def update_log():
         "Content-Type": "application/json",
         "Authorization": ACCESS_TOKEN
     }
-    print(body)
-    response = requests.post(DATA_URL, data=json.dumps(body), headers=headers)
-    print(response.content)
+    requests.post(DATA_URL, data=json.dumps(body), headers=headers)
