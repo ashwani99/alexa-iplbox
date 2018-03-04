@@ -1,19 +1,30 @@
+let AuthData;
+import isEmpty from "lodash/isEmpty";
+import { AsyncStorage } from "react-native";
+
 export const getAuthTocken = () => {
     try {
-        return JSON.parse(localStorage.getItem("authData")).auth_token;
+        return getAuth().auth_token;
     } catch (error) {
         return null;
     }
 }
 
+export const setAuth = (data) => {
+    AuthData = data;
+};
+
+export const getAuth = () => {
+    return AuthData;
+};
+
+
 export const getHeader = (noAuth = false, ...data) => {
     let authToken = getAuthTocken();
-    console.log("Hello" + data);
     let headerData = {
-        Credentials: 'include',
+        credentials: 'include',
         "Content-Type": "application/json"
     };
-    console.log(authToken);
     if (authToken !== null && !noAuth) {
         headerData["Authorization"] = "Bearer " + authToken;
         return headerData;

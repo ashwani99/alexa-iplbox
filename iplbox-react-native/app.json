@@ -1,15 +1,21 @@
 {
   "expo": {
-    "sdkVersion": "23.0.0",
-    "name":"IPL Box",
-    "icon":"./src/imgs/AlexaIPL.png",
-    "version":"1.0.0",
-    "slug":"iplbox",
-    "ios": {
-      "bundleIdentifier": "com.dhairya.iplbox"
-    },
+    "name": "IPL Box",
+    "description": "An Amazon Alexa skill that answers facts about the Indian Premier League (IPL) cricket league.",
+    "slug": "iplbox-app",
+    "sdkVersion": "25.0.0",
+    "icon": "src/Assets/Logo.png",
     "android": {
-      "package": "com.dhairya.iplbox"
+      "splash": {
+        "backgroundColor": "#154360",
+        "ldpi": "src/Assets/Splash/drawable-ldpi/screen.png",
+        "mdpi": "src/Assets/Splash/drawable-mdpi/screen.png",
+        "hdpi": "src/Assets/Splash/drawable-hdpi/screen.png",
+        "xhdpi": "src/Assets/Splash/drawable-xhdpi/screen.png",
+        "xxhdpi": "src/Assets/Splash/drawable-xxhdpi/screen.png",
+        "xxxhdpi": "src/Assets/Splash/drawable-xxxhdpi/screen.png"
+      },
+      "icon": "src/Assets/Logo.png"
     }
   }
 }
