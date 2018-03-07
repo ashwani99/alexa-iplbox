@@ -76,6 +76,7 @@ def update_log():
             'table': 'logs',
             'objects': [
                 {
+                    'hasura_id': get_hasura_id(),
                     'user_id': session.user.userId,
                     'timestamp': flask_ask_request.timestamp.isoformat(),
                     'query_text': session.attributes['query_text'],
@@ -91,3 +92,9 @@ def update_log():
         "Authorization": ACCESS_TOKEN
     }
     requests.post(DATA_URL, data=json.dumps(body), headers=headers)
+
+
+def get_hasura_id():
+    auth_url = 'https://auth.{}.hasura-app.io/v1/user/info'.format(CLUSTER_NAME)
+    response = requests.get(auth_url).json()
+    return response['hasura_id']
