@@ -1,0 +1,20 @@
+- args:
+    role: user
+    table: logs
+  type: drop_select_permission
+- args:
+    permission:
+      columns:
+      - hasura_id
+      - user_id
+      - query_text
+      - query_response
+      - is_error_occured
+      - timestamp
+      - response_time
+      filter:
+        hasura_id:
+          $eq: X-Hasura-User-Id
+    role: user
+    table: logs
+  type: create_select_permission
