@@ -8,7 +8,6 @@ from src import app, ask
 
 PRODUCTION_ENV = os.environ.get('PRODUCTION')
 CLUSTER_NAME = os.environ.get('CLUSTER_NAME')
-ACCESS_TOKEN = os.environ.get('DATA_ADMIN_TOKEN')
 
 if CLUSTER_NAME is None:
     print('CLUSTER_NAME not found. Please export environment variable CLUSTER_NAME=<name_of_your_hasura_cluster>')
@@ -38,7 +37,7 @@ def get_winner(season):
     '''Responds with the name of the winning team in a given year'''
     headers = {
         "Content-Type": "application/json",
-        "Authorization": ACCESS_TOKEN
+        "Authorization": flask_ask_request.session.user.accessToken;
     }
     body = {
         "type": "run_sql",
@@ -64,11 +63,11 @@ def get_winner(season):
         session.attributes['is_error_occured'] = True
     session.attributes['query_text'] = 'Which team won the IPL in {}'.format(season) # Hardcoded value, TODO: update this
     session.attributes['response_time'] = response.elapsed.total_seconds()
-    update_log()
+    update_log(flask_ask_request.session.user.accessToken)
     return statement(session.attributes['query_response'])
 
 
-def update_log():
+def update_log(access_token):
     '''Logs the latest query/response to the database'''
     body = {
         'type': 'insert',
@@ -76,7 +75,7 @@ def update_log():
             'table': 'logs',
             'objects': [
                 {
-                    'hasura_id': get_hasura_id(),
+                    'hasura_id': get_hasura_id(access_token),
                     'user_id': session.user.userId,
                     'timestamp': flask_ask_request.timestamp.isoformat(),
                     'query_text': session.attributes['query_text'],
@@ -89,12 +88,13 @@ def update_log():
     }
     headers = {
         "Content-Type": "application/json",
-        "Authorization": ACCESS_TOKEN
+        "Authorization": access_token
     }
     requests.post(DATA_URL, data=json.dumps(body), headers=headers)
 
 
-def get_hasura_id():
+def get_hasura_id(access_token):
     auth_url = 'https://auth.{}.hasura-app.io/v1/user/info'.format(CLUSTER_NAME)
-    response = requests.get(auth_url).json()
+    headers = {'Authorization': 'Bearer {}'.format(access_token)}
+    response = requests.get(auth_url, headers=headers).json()
     return response['hasura_id']
