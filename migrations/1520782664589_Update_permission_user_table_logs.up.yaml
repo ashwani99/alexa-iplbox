@@ -1,0 +1,8 @@
+- args:
+    permission:
+      filter:
+        hasura_id:
+          $eq: X-Hasura-User-Id
+    role: user
+    table: logs
+  type: create_delete_permission
